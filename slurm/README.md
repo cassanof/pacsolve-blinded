@@ -24,7 +24,7 @@ Note that I've already prepared several directories of tarballs:
 6. `REPO_ROOT/slurm/vuln_tarballs1000`: A sample of 1000 of those
 7. `REPO_ROOT/slurm/vuln_tarballs5000`: A sample of 5000 of those
 8. `REPO_ROOT/slurm/vuln_tarballs10000`: A sample of 10000 of those
-9. `REPO_ROOT/slurm/tarballs_arjun_jquery_revdeps_aug3`: The package JSONs Arjun had originally colleted based on jquery.
+9. `REPO_ROOT/slurm/tarballs_jquery_revdeps_aug3`: The package JSONs Arjun had originally colleted based on jquery.
 
 
 

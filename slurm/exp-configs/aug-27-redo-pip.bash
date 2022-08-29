@@ -2,10 +2,10 @@
 
 export EXPERIMENT_TYPE=top1000_comparison
 export EXPERIMENT_DIR=$HOME/exp/aug-27-redo-pip
-export TARBALL_DIR=/home/donald/pacsolve/slurm/top1000tarballs
+export TARBALL_DIR=/home/pacsolve/slurm/top1000tarballs
 
-export Z3_LOC=/mnt/data/donald/pacsolve/z3/build/z3
-#export Z3_LOC=/home/donald/pacsolve/z3/more_builds/z3-4.8.8-x64-ubuntu-16.04/bin/z3
+export Z3_LOC=/mnt/data/pacsolve/z3/build/z3
+#export Z3_LOC=/home/pacsolve/z3/more_builds/z3-4.8.8-x64-ubuntu-16.04/bin/z3
 export Z3_MODEL_OPTION=True
 
 mkdir -p $EXPERIMENT_DIR

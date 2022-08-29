@@ -682,7 +682,6 @@ module.exports = cls => class IdealTreeBuilder extends cls {
 
   async [_performRosetteQuery] (query) {
     const queryPath = await tmp.tmpName()
-    // const queryPath = "/Users/donaldpinckney/Research/packages/dependency-runner/RosetteSolver/sample-data/input_sample_ejs.json"
     const answerPath = await tmp.tmpName()
     
     await fs.writeFile(queryPath, JSON.stringify(query, null, '\t'))

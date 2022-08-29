@@ -2,10 +2,10 @@
 # A template for running experiments on discovery
 
 export EXPERIMENT_TYPE=vuln_tarballs # either: vuln_tarballs or top1000_comparison
-export EXPERIMENT_DIR=/scratch/pinckney.d/aug-21-vulns-1000/ # Set this to be the main work directory for the experiment
-export TARBALL_DIR=/work/arjunguha-research-group/pacsolve/slurm/vuln_tarballs1000 # Set this to be the directory of tarballs to use
+export EXPERIMENT_DIR=/scratch/aug-21-vulns-1000/ # Set this to be the main work directory for the experiment
+export TARBALL_DIR=/work/pacsolve/slurm/vuln_tarballs1000 # Set this to be the directory of tarballs to use
 
-export Z3_LOC=/work/arjunguha-research-group/pacsolve/z3/build/z3
+export Z3_LOC=/work/pacsolve/z3/build/z3
 export Z3_MODEL_OPTION=True
 
 mkdir -p $EXPERIMENT_DIR

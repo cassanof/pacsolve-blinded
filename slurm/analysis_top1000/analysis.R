@@ -1,5 +1,5 @@
 ## ----setup--------------------------------------------------------------------
-.libPaths("/mnt/data/donald/R/x86_64-pc-linux-gnu-library/4.1")
+.libPaths("/mnt/data/R/x86_64-pc-linux-gnu-library/4.1")
 
 suppressMessages(library(tidyverse))
 library(stringr)

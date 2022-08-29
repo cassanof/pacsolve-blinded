@@ -17,27 +17,27 @@ echo "Experiment directory: $EXP"
 
 echo "Preparing directory"
 ./main.py prepare \
-  --source /work/arjunguha-research-group/minnpm-slurm/tarballs \
+  --source /work/minnpm-slurm/tarballs \
   --target $EXP/vanilla
   
 ./main.py prepare \
-  --source /work/arjunguha-research-group/minnpm-slurm/tarballs \
+  --source /work/minnpm-slurm/tarballs \
   --target $EXP/rosette/npm/min_oldness,min_num_deps
 ./main.py prepare \
-  --source /work/arjunguha-research-group/minnpm-slurm/tarballs \
+  --source /work/minnpm-slurm/tarballs \
   --target $EXP/rosette/npm/min_num_deps,min_oldness
 ./main.py prepare \
-  --source /work/arjunguha-research-group/minnpm-slurm/tarballs \
+  --source /work/minnpm-slurm/tarballs \
   --target $EXP/rosette/npm/min_duplicates,min_oldness
 ./main.py prepare \
-  --source /work/arjunguha-research-group/minnpm-slurm/tarballs \
+  --source /work/minnpm-slurm/tarballs \
   --target $EXP/rosette/npm/min_oldness,min_duplicates
   
 ./main.py prepare \
-  --source /work/arjunguha-research-group/minnpm-slurm/tarballs \
+  --source /work/minnpm-slurm/tarballs \
   --target $EXP/rosette/pip/min_oldness,min_num_deps
 ./main.py prepare \
-  --source /work/arjunguha-research-group/minnpm-slurm/tarballs \
+  --source /work/minnpm-slurm/tarballs \
   --target $EXP/rosette/pip/min_num_deps,min_oldness
 
 

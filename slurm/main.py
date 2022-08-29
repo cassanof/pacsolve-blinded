@@ -93,7 +93,7 @@ class Gather(object):
             p_result = read_json(durable_status_path)
         elif os.path.exists(transient_status_path):
             p_result = read_json(transient_status_path)
-            # HACK(arjun): This bit of info should have been written into
+            # HACK: This bit of info should have been written into
             # experiment.json.
             with open(os.path.join(dir, 'package', 'experiment.out'), 'r') as f:
                 output_lines = f.readlines()
@@ -260,7 +260,7 @@ class Run(object):
                 "#SBATCH --constraint=haswell|broadwell|skylake_avx512|zen2|zen|cascadelake",
                 f'#SBATCH --cpus-per-task={cpus_per_task}',
                 "module load discovery nodejs",
-                "export PATH=$PATH:/home/a.guha/bin:/work/arjunguha-research-group/software/bin",
+                "export PATH=$PATH:/home/a.guha/bin:/work/software/bin",
             ]
 
         if z3_abs_path is not None:
@@ -424,7 +424,7 @@ class Run(object):
                 return None
             status = self.get_npmstatus(output_path)
             if status in [ 'ERESOLVE', 'ETARGET', 'EUNSUPPORTEDPROTOCOL', 'EBADPLATFORM' ]:
-                # TODO(arjun): This is for compatibility with older data. If
+                # This is for compatibility with older data. If
                 # we do a totally fresh run, can refactor to stick reason into
                 # status and remove the 'cannot_install' status.
                 write_json(output_status_path, { 'status': 'cannot_install', 'reason': status })

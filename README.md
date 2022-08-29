@@ -5,10 +5,6 @@
 ### Clone Repo
 
 - Make sure to also `git submodule init` and `git submodule update` to fetch the submodules. (Or do the clone recursively thing, can't remember the flag)
-- After cloning repo / submodules, make sure that each submodule is pointing to the right remote / branch:
-  - `cd npm/; git remote -v; git status; cd ..` should show the remote is `https://github.com/donald-pinckney/cli/`, and the branch is `latest`
-  - `cd arborist/; git remote -v; git status; cd ..` should show the remote is `https://github.com/donald-pinckney/arborist`, and the branch is `main`
-  - If either of these are wrong, change remotes / checkout branches appropriately.
 
 ## Native Setup
 

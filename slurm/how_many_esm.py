@@ -3,7 +3,7 @@ import numpy as np
 
 import tarball_helpers
 
-GLOBAL_TESTING_PREFIX = "/mnt/data/donald/npm_global_testing_prefix"
+GLOBAL_TESTING_PREFIX = "/mnt/data/npm_global_testing_prefix"
 TARBALL_ROOT = sys.argv[1].rstrip("/")
 USE_MINNPM = True
 
