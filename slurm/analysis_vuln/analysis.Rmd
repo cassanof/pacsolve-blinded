@@ -30,7 +30,7 @@ library(fontcm)
 ```
 
 ```{r dirs}
-data_root <- "/proj/pinckney/experiments/aug-20-vulns-small"
+data_root <- "/proj/experiments/aug-20-vulns-small"
 
 perf_root <- str_c(data_root, "-perf")
 oldness_root <- str_c(data_root, "-oldness")

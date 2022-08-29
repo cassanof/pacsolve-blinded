@@ -16,4 +16,4 @@ elif [ "$solver" = "maxnpm_cve_oldness_pip_else_npm" ]; then
     lock_name="maxnpmcveoldness_pip-else-npm"
 fi
 
-python3 ../../lockfile_metrics.py /scratch/a.guha/exp/package-$name-$commit.tgz/package/$lock_name-lockfile.json
+python3 ../../lockfile_metrics.py /scratch/exp/package-$name-$commit.tgz/package/$lock_name-lockfile.json

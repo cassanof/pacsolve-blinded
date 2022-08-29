@@ -3,10 +3,10 @@
 
 
 export EXPERIMENT_TYPE=vuln_tarballs
-export EXPERIMENT_DIR=/proj/pinckney/experiments/aug-20-vulns/
-export TARBALL_DIR=/proj/pinckney/pacsolve/slurm/vuln_tarballs
+export EXPERIMENT_DIR=/proj/experiments/aug-20-vulns/
+export TARBALL_DIR=/proj/pacsolve/slurm/vuln_tarballs
 
-export Z3_LOC=/proj/pinckney/pacsolve/z3/build/z3
+export Z3_LOC=/proj/pacsolve/z3/build/z3
 export Z3_MODEL_OPTION=True
 
 mkdir -p $EXPERIMENT_DIR

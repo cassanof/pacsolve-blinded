@@ -246,7 +246,7 @@ class Run(object):
             self.sbatch_lines = [
                 "#SBATCH --time=00:30:00",
                 "#SBATCH --partition=all",
-                "export PYTHONPATH=/proj/pinckney/.local/lib/python3.8/site-packages",
+                "export PYTHONPATH=/proj/.local/lib/python3.8/site-packages",
                 '[ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh"',
                 "nvm use 15.2.1",
             ]
@@ -260,7 +260,7 @@ class Run(object):
                 "#SBATCH --constraint=haswell|broadwell|skylake_avx512|zen2|zen|cascadelake",
                 f'#SBATCH --cpus-per-task={cpus_per_task}',
                 "module load discovery nodejs",
-                "export PATH=$PATH:/home/a.guha/bin:/work/software/bin",
+                "export PATH=$PATH:/home/bin:/work/software/bin",
             ]
 
         if z3_abs_path is not None:
@@ -277,7 +277,7 @@ class Run(object):
 
     def run_chunk(self, pkgs):
         if self.on_ripley:
-            os.environ["PATH"] = "/proj/pinckney/.nvm/versions/node/v15.2.1/bin:" + os.environ["PATH"]
+            os.environ["PATH"] = "/proj/.nvm/versions/node/v15.2.1/bin:" + os.environ["PATH"]
 
         # Tip: Cannot use ProcessPoolExecutor with the ClusterFutures executor. It seems like
         # ProcessPoolExector forks the process with the same command-line arguments, including

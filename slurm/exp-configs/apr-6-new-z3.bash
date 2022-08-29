@@ -1,4 +1,4 @@
-export EXPERIMENT_DIR=/scratch/pinckney.d/apr-6-minnpm-exp-new-z3/
+export EXPERIMENT_DIR=/scratch/apr-6-minnpm-exp-new-z3/
 export Z3_LOC=/work/pacsolve/z3/build/z3
 export Z3_MODEL_OPTION=True
 

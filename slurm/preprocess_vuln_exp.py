@@ -13,7 +13,7 @@ import csv
 
 def main():
     if len(sys.argv) != 2:
-        print("Usage: python3 preprocess_vuln_exp.py [exp dir, e.g. /scratch/a.guha/exp/]")
+        print("Usage: python3 preprocess_vuln_exp.py [exp dir, e.g. /scratch/exp/]")
         sys.exit(1)
     exp_dir_path = Path(sys.argv[1])
 

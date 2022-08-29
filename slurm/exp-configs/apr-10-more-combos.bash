@@ -1,4 +1,4 @@
-export EXPERIMENT_DIR=/scratch/pinckney.d/apr-10-more-combos/
+export EXPERIMENT_DIR=/scratch/apr-10-more-combos/
 export Z3_LOC=/work/pacsolve/z3/build/z3
 export Z3_MODEL_OPTION=True
 
