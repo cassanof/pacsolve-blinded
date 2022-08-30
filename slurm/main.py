@@ -196,7 +196,7 @@ def run(argv):
 
 def solve_commands(mode_configuration):
     if mode_configuration['rosette']:
-        cmd_no_cycle_flag = ['minnpm', 'install', '--no-audit', '--prefer-offline', '--rosette',
+        cmd_no_cycle_flag = ['maxnpm', 'install', '--no-audit', '--prefer-offline', '--rosette',
                 '--ignore-scripts',
                 '--consistency', mode_configuration['consistency'],
                 '--minimize', mode_configuration['minimize'] ]
@@ -204,9 +204,9 @@ def solve_commands(mode_configuration):
             cmd_no_cycle_flag.append('--disallow-cycles')
         return [cmd_no_cycle_flag]
     else:
-        vanilla_install_cmd = 'minnpm install --prefer-offline --no-audit --omit dev --omit peer --omit optional --ignore-scripts'.split(' ')
-        audit_fix_cmd = 'minnpm audit fix --omit dev --omit peer --omit optional --prefer-offline --ignore-scripts --audit-level=none'.split(' ')
-        audit_fix_force_cmd = 'minnpm audit fix --force --omit dev --omit peer --omit optional --prefer-offline --ignore-scripts --audit-level=none'.split(' ')
+        vanilla_install_cmd = 'maxnpm install --prefer-offline --no-audit --omit dev --omit peer --omit optional --ignore-scripts'.split(' ')
+        audit_fix_cmd = 'maxnpm audit fix --omit dev --omit peer --omit optional --prefer-offline --ignore-scripts --audit-level=none'.split(' ')
+        audit_fix_force_cmd = 'maxnpm audit fix --force --omit dev --omit peer --omit optional --prefer-offline --ignore-scripts --audit-level=none'.split(' ')
         if mode_configuration['audit_fix'] == 'no':
             return [vanilla_install_cmd]
         elif mode_configuration['audit_fix'] == 'yes':
@@ -285,9 +285,9 @@ class Run(object):
         errs = [ ]
         with concurrent.futures.ThreadPoolExecutor(max_workers=self.cpus_per_task) as executor:
             if self.use_slurm:
-                m = executor.map(self.run_minnpm, pkgs)
+                m = executor.map(self.run_maxnpm, pkgs)
             else:
-                m = iter(tqdm(executor.map(self.run_minnpm, pkgs), total=len(pkgs)))
+                m = iter(tqdm(executor.map(self.run_maxnpm, pkgs), total=len(pkgs)))
 
             for err in suppressed_iterator(m):
                 if err is not None:
@@ -391,7 +391,7 @@ class Run(object):
         return 0, time.time() - start_time
 
 
-    def run_minnpm(self, pkg_info):
+    def run_maxnpm(self, pkg_info):
         (tgz, pkg_target, mode_configuration) = pkg_info
         pkg_path = f'{pkg_target}/package'
         node_modules_path = f'{pkg_path}/node_modules'
