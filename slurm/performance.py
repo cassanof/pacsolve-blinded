@@ -9,7 +9,7 @@ import argparse
 import subprocess
 import time
 from util import read_json, eprint
-from main import solve_command, MODE_CONFIGURATIONS
+from main import solve_commands
 
 class Performance(object):
 
@@ -28,7 +28,6 @@ class Performance(object):
                 'minimize': target_pieces[-1],
                 'consistency': target_pieces[-3],
            }
-        assert(self.mode_configuration in MODE_CONFIGURATIONS)
 
     def run_one(self, remaining: int, package_name: str, pkg_path: str):
         start_time = time.time()
@@ -36,7 +35,7 @@ class Performance(object):
             eprint(f'Timing {package_name}. {remaining} remaining...')
             output_path = f'{pkg_path}/experiment.out'
             with open(output_path, 'wt') as out:
-                exit_code = subprocess.Popen(solve_command(self.mode_configuration),
+                exit_code = subprocess.Popen(solve_commands(self.mode_configuration),
                     cwd=pkg_path,
                     stdout=out,
                     stderr=out).wait(self.timeout)
