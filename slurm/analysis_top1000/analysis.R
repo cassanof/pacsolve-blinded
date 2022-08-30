@@ -4,8 +4,6 @@
 suppressMessages(library(tidyverse))
 library(stringr)
 library(xtable)
-suppressMessages(library(extrafont))
-library(fontcm)
 
 
 ## ----dirs---------------------------------------------------------------------
