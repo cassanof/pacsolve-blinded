@@ -35,7 +35,7 @@ class Performance(object):
             eprint(f'Timing {package_name}. {remaining} remaining...')
             output_path = f'{pkg_path}/experiment.out'
             with open(output_path, 'wt') as out:
-                exit_code = subprocess.Popen(solve_commands(self.mode_configuration),
+                exit_code = subprocess.Popen(solve_commands(self.mode_configuration)[0],
                     cwd=pkg_path,
                     stdout=out,
                     stderr=out).wait(self.timeout)
