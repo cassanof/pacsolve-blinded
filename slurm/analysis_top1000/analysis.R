@@ -7,16 +7,16 @@ library(xtable)
 
 
 ## ----dirs---------------------------------------------------------------------
-env_data_root <- Sys.getenv("ANALYSIS_DATA_ROOT")
+env_data_root <- "/home/artifact/"
 if (env_data_root != "") {
   data_root <- env_data_root
 } else {
   data_root <- "../permanently_saved_results/apr-10-more-combos"
 }
 
-perf_root <- str_c(data_root, "/perf")
-oldness_root <- str_c(data_root, "/oldness")
-sizes_root <- str_c(data_root, "/sizes")
+perf_root <- str_c(data_root, "/experiment-dir-perf")
+oldness_root <- str_c(data_root, "/experiment-dir-oldness")
+sizes_root <- str_c(data_root, "/experiment-dir-sizes")
 
 
 results_root <- str_c(data_root, "/number-results")
@@ -41,8 +41,8 @@ mytheme <- function() {
            theme(
              # NOTE: UNCOMMENT WHEN RENDING PLOTS FOR THE PAPER
              # (can't get the CM fonts to work in artifact VM...)
-             text = element_text(family = "CM Roman", size=10),
-              panel.grid.major = element_blank(),
+             text = element_text(family = "Times", size=10),
+             panel.grid.major = element_blank(),
              # panel.grid.minor = element_blank(),
              # panel.grid.major = element_line(colour="gray", size=0.1),
              # panel.grid.minor =
@@ -68,7 +68,7 @@ mysave <- function(filename) {
 
 
 ## -----------------------------------------------------------------------------
-raw_data <- read_csv(paste(data_root, "/results.csv", sep=""),
+raw_data <- read_csv(paste(data_root, "/experiment-dir/results.csv", sep=""),
   col_types = cols(Status=col_factor(),
                    Project=col_factor(),
                    Rosette=col_logical(),
@@ -78,7 +78,7 @@ raw_data <- read_csv(paste(data_root, "/results.csv", sep=""),
                    Time=col_double(),
                    # CVE=col_double(),
                    NDeps=col_integer()),
-  show_col_types = FALSE)
+  )
                    
 
 
@@ -106,8 +106,6 @@ num_experiments <- raw_data %>%
   ungroup() %>%
   select(Count) %>%
   unique()
-stopifnot(nrow(num_experiments) == 1)
-stopifnot(num_experiments[1] == 1000)
 
 
 ## -----------------------------------------------------------------------------
@@ -455,18 +453,18 @@ fraction_shrinking_min_old
 oldness_data <- bind_rows(
   read_csv(paste(oldness_root, "/vanilla.csv", sep=""),
     col_types = cols(Package=col_factor(),
-                     Oldness=col_double()),
-    show_col_types = FALSE) %>%
+                     Oldness=col_double())
+    ) %>%
     mutate(Solver = "NPM"),
   read_csv(paste(oldness_root, "/rosette-npm-allow_cycles-min_oldness-min_num_deps.csv", sep=""),
     col_types = cols(Package=col_factor(),
-                     Oldness=col_double()),
-    show_col_types = FALSE) %>%
+                     Oldness=col_double())
+    ) %>%
     mutate(Solver = "MinOldness"),
   read_csv(paste(oldness_root, "/rosette-npm-allow_cycles-min_num_deps-min_oldness.csv", sep=""),
     col_types = cols(Package=col_factor(),
-                     Oldness=col_double()),
-    show_col_types = FALSE) %>%
+                     Oldness=col_double())
+    ) %>%
     mutate(Solver = "MinNumDeps")) %>%
   mutate(Project=Package) %>%
   select(Project,Oldness,Solver)
@@ -580,10 +578,10 @@ mysave("oldness_scatterplot.pdf")
 
 
 ## -----------------------------------------------------------------------------
-vanilla_sizes <- read_tsv(paste(sizes_root, "/vanilla.tsv", sep=""), col_names = c("Size", "Project"), show_col_types = FALSE) %>% drop_na()
-min_deps_sizes <- read_tsv(paste(sizes_root, "/npm_min_num_deps.tsv", sep=""), col_names = c("Size", "Project"), show_col_types = FALSE) %>% drop_na()
-min_oldness_sizes <- read_tsv(paste(sizes_root, "/npm_min_oldness.tsv", sep=""), col_names = c("Size", "Project"), show_col_types = FALSE) %>% drop_na()
-min_duplicates_sizes <- read_tsv(paste(sizes_root, "/npm_min_duplicates.tsv", sep=""), col_names = c("Size", "Project"), show_col_types = FALSE) %>% drop_na()
+vanilla_sizes <- read_tsv(paste(sizes_root, "/vanilla.tsv", sep=""), col_names = c("Size", "Project")) %>% drop_na()
+min_deps_sizes <- read_tsv(paste(sizes_root, "/npm_min_num_deps.tsv", sep=""), col_names = c("Size", "Project")) %>% drop_na()
+min_oldness_sizes <- read_tsv(paste(sizes_root, "/npm_min_oldness.tsv", sep=""), col_names = c("Size", "Project")) %>% drop_na()
+min_duplicates_sizes <- read_tsv(paste(sizes_root, "/npm_min_duplicates.tsv", sep=""), col_names = c("Size", "Project")) %>% drop_na()
 
 ok_projects <- raw_data %>% 
   filter(Rosette == FALSE & Status == "success") %>% 
@@ -676,16 +674,16 @@ write(
 ## -----------------------------------------------------------------------------
 slowdowns <- read_csv(paste(perf_root,"/vanilla-perf.csv",sep=""),
          col_names = c("Project", "Time"),
-         col_types = cols(Project = col_factor(), Time = col_double()),
-         show_col_types = FALSE) %>%
+         col_types = cols(Project = col_factor(), Time = col_double())
+         ) %>%
   group_by(Project) %>%
   summarise(NPM = mean(Time)) %>%
   ungroup() %>%
   inner_join(
     read_csv(paste(perf_root,"/rosette-perf.csv",sep=""),
              col_names = c("Project", "Time"),
-             col_types = cols(Project = col_factor(), Time = col_double()),
-             show_col_types = FALSE) %>%
+             col_types = cols(Project = col_factor(), Time = col_double())
+             ) %>%
         group_by(Project) %>%
       summarise(MinNPM = mean(Time)) %>%
       ungroup()) %>%
