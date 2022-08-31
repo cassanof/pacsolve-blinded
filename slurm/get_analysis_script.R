@@ -1,1 +1,1 @@
-knitr::purl("analysis.Rmd", output = "analysis.R")
+knitr::purl("analysis_top1000/analysis.Rmd", output = "analysis_top1000/analysis.R")

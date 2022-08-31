@@ -20,7 +20,7 @@ class Performance(object):
         self.trials = trials
 
         target_pieces = target.split('/')
-        if target_pieces[-1] == 'vanilla':
+        if target_pieces[-2] == 'vanilla':
             self.mode_configuration = {
                 'rosette': False,
                 'audit_fix': "no",
