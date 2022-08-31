@@ -1,6 +1,4 @@
 ## ----setup--------------------------------------------------------------------
-.libPaths("/mnt/data/R/x86_64-pc-linux-gnu-library/4.1")
-
 suppressMessages(library(tidyverse))
 library(stringr)
 library(xtable)
@@ -31,6 +29,7 @@ dir.create(plots_dir, showWarnings = FALSE)
 
 results_tex <- str_c(results_root, "/results.tex")
 
+
 write("% These are results from the R Notebook.", results_tex, append=FALSE)
 write("% Run the notebook from top to bottom", results_tex, append=TRUE)
 
@@ -38,25 +37,25 @@ write("% Run the notebook from top to bottom", results_tex, append=TRUE)
 ## -----------------------------------------------------------------------------
 mytheme <- function() {
   return(theme_bw() +
-           theme(
-             # NOTE: UNCOMMENT WHEN RENDING PLOTS FOR THE PAPER
-             # (can't get the CM fonts to work in artifact VM...)
-             text = element_text(family = "Times", size=10),
-             panel.grid.major = element_blank(),
-             # panel.grid.minor = element_blank(),
-             # panel.grid.major = element_line(colour="gray", size=0.1),
-             # panel.grid.minor =
-             #  element_line(colour="gray", size=0.1, linetype='dotted'),
-             axis.ticks = element_line(size=0.05),
-             axis.ticks.length=unit("-0.05", "in"),
-             axis.text.y = element_text(margin = margin(r = 5)),
-             axis.text.x = element_text(hjust=1),
-             legend.key = element_rect(colour=NA),
-             legend.spacing = unit(0.001, "in"),
-             legend.key.size = unit(0.2, "in"),
-             legend.title = element_blank(),
-             legend.position = c(0.75, .7),
-             legend.background = element_blank()))
+          theme(
+            # NOTE: UNCOMMENT WHEN RENDING PLOTS FOR THE PAPER
+            # (can't get the CM fonts to work in artifact VM...)
+            text = element_text(family = "Times", size=10),
+            panel.grid.major = element_blank(),
+            # panel.grid.minor = element_blank(),
+            # panel.grid.major = element_line(colour="gray", size=0.1),
+            # panel.grid.minor =
+            #  element_line(colour="gray", size=0.1, linetype='dotted'),
+            axis.ticks = element_line(size=0.05),
+            axis.ticks.length=unit("-0.05", "in"),
+            axis.text.y = element_text(margin = margin(r = 5)),
+            axis.text.x = element_text(hjust=1),
+            legend.key = element_rect(colour=NA),
+            legend.spacing = unit(0.001, "in"),
+            legend.key.size = unit(0.2, "in"),
+            legend.title = element_blank(),
+            legend.position = c(0.75, .7),
+            legend.background = element_blank()))
 }
 
 mysave <- function(filename) {
@@ -77,8 +76,8 @@ raw_data <- read_csv(paste(data_root, "/experiment-dir/results.csv", sep=""),
                    Minimize=col_factor(),
                    Time=col_double(),
                    # CVE=col_double(),
-                   NDeps=col_integer()),
-  )
+                   NDeps=col_integer())
+)
                    
 
 
@@ -96,17 +95,6 @@ levels(raw_data$Minimize)
 
 ## -----------------------------------------------------------------------------
 levels(raw_data$DisallowCycles)
-
-
-## -----------------------------------------------------------------------------
-num_experiments <- raw_data %>% 
-  # group_by(Rosette,AuditFix,Minimize,Consistency,DisallowCycles) %>%
-  group_by(Rosette,Minimize,Consistency,DisallowCycles) %>%
-  summarize(Count = n()) %>%
-  ungroup() %>%
-  select(Count) %>%
-  unique()
-
 
 ## -----------------------------------------------------------------------------
 failure_analysis <- raw_data %>% 
@@ -388,15 +376,59 @@ mysave("shrinkage.pdf")
 
 
 ## -----------------------------------------------------------------------------
-# min_dep_analysis_shrinkage %>% 
-#   filter(Shrinkage <= 1.0) %>%
-#   filter(Comparison == 'NPM_NPM_MinDepsOldness_Shrinkage') %>%
-#   ggplot(aes(Shrinkage)) +
-#   geom_histogram(aes(y=..ndensity..),binwidth=0.1) +
-#   ylab("Count of packages") +
-#   xlab("Fraction of dependencies") +
-#   mytheme()
-# mysave("shrinkage_hist.pdf")
+min_dep_analysis_delta %>% 
+  # filter(Delta >= 0) %>%
+  filter(Comparison == "NPM_NPM_MinDepsOldness_Delta" | Comparison == "NPM_NPM_MinOldness_Delta") %>%
+  mutate(Comparison = recode(Comparison, 
+                             NPM_Cargo_MinOldness_Delta="Cargo",
+                             NPM_NPM_MinDepsOldness_Delta="Min Deps",
+                             NPM_NPM_MinDuplicatesOldness_Delta="MinDuplicates",
+                             NPM_NPM_MinOldness_Delta="Min Oldness",
+                             NPM_PIP_MinOldness_Delta="PIP vs. NPM")) %>%
+  ggplot(aes(Delta, colour=Comparison)) +
+  stat_ecdf() +
+  ylab("Percentange of packages") +
+  xlab("Number of fewer dependencies with MaxNPM") +
+  mytheme()
+mysave("shrinkage_delta.pdf")
+
+
+## -----------------------------------------------------------------------------
+min_dep_analysis_shrinkage %>% 
+  filter(Shrinkage <= 1.0) %>%
+  filter(Comparison == "NPM_NPM_MinDepsOldness_Shrinkage" | Comparison == "NPM_NPM_MinOldness_Shrinkage") %>%
+  mutate(Comparison = recode(Comparison, 
+                             NPM_Cargo_MinOldness_Shrinkage="Cargo",
+                             NPM_NPM_MinDepsOldness_Shrinkage="Min Deps",
+                             NPM_NPM_MinDuplicatesOldness_Shrinkage="MinDuplicates",
+                             NPM_NPM_MinOldness_Shrinkage="Min Oldness",
+                             NPM_PIP_MinOldness_Shrinkage="PIP vs. NPM")) %>%
+  ggplot(aes(Shrinkage, fill=Comparison)) +
+  geom_histogram(alpha=0.7, position="identity") +
+  # coord_trans(x="log2") +
+  # scale_x_continuous(trans='log2') + 
+  ylab("Percentange of packages") +
+  xlab("Fraction of dependencies") +
+  mytheme()
+mysave("shrinkage_hist.pdf")
+
+
+## -----------------------------------------------------------------------------
+min_dep_analysis_delta %>% 
+  # filter(Delta >= 0) %>%
+  filter(Comparison == "NPM_NPM_MinDepsOldness_Delta" | Comparison == "NPM_NPM_MinOldness_Delta") %>%
+  mutate(Comparison = recode(Comparison, 
+                             NPM_Cargo_MinOldness_Delta="Cargo",
+                             NPM_NPM_MinDepsOldness_Delta="Min Deps",
+                             NPM_NPM_MinDuplicatesOldness_Delta="MinDuplicates",
+                             NPM_NPM_MinOldness_Delta="Min Oldness",
+                             NPM_PIP_MinOldness_Delta="PIP vs. NPM")) %>%
+  ggplot(aes(Delta, fill=Comparison)) +
+  geom_histogram(alpha=0.7, position="identity") +
+  ylab("Percentange of packages") +
+  xlab("Number of fewer dependencies with MaxNPM") +
+  mytheme()
+mysave("shrinkage_delta_hist.pdf")
 
 
 ## -----------------------------------------------------------------------------
@@ -421,7 +453,7 @@ shrinkage_table <- group_counts %>%
   select(Configuration, '# Shrunk (of 477)', '# Enlarged (of 477)')
 shrinkage_table
 
-print(xtable(as.data.frame(shrinkage_table), type="latex"), include.rownames=FALSE, file=str_c(tables_dir, "/", "shinkage_combos.tex"))
+print(xtable(as.data.frame(shrinkage_table), type="latex"), include.rownames=FALSE, file=str_c(tables_dir, "/", "shrinkage_combos.tex"))
 knitr::kable(shrinkage_table)
 
 
@@ -541,6 +573,13 @@ worse_oldness_min_deps
 
 
 ## -----------------------------------------------------------------------------
+change_cat <- function(x) {
+    ifelse(is.na(x), NA, ifelse(x == 0, "same", ifelse(x > 0, "better", "worse")))
+}
+
+oldness_minnum_comparison_df <- oldness_by_pkg_success_non_trivial %>%
+  mutate(CompCat=change_cat(MinNumDeps - NPM))
+
 oldness_by_pkg_success_non_trivial %>%
   ggplot(aes(x=NPM,y=MinNumDeps)) + 
   geom_point(shape=4, size=1.5) + 
@@ -550,6 +589,21 @@ oldness_by_pkg_success_non_trivial %>%
   mytheme()
 
 mysave("oldness_scatterplot_minimzing_num_deps.pdf")
+
+
+## -----------------------------------------------------------------------------
+oldness_by_pkg_success_non_trivial %>% 
+  ggplot(aes(MinNumDeps - NPM)) +
+  stat_ecdf() +
+  ylab("Percentange of packages") +
+  xlab("Difference in oldness, minimizing # dependencies") +
+  mytheme()
+mysave("oldness_ecdf_minimzing_num_deps.pdf")
+
+
+## -----------------------------------------------------------------------------
+ggplot(oldness_by_pkg_success_non_trivial, aes(x= MinNumDeps - NPM)) + mytheme() + geom_histogram() + xlab('Oldness difference, minimizing #deps') + ylab('Count')
+mysave('oldness_hist_minimzing_num_deps.pdf')
 
 
 ## -----------------------------------------------------------------------------
@@ -563,9 +617,18 @@ oldness_data %>%
 
 
 ## -----------------------------------------------------------------------------
-oldness_data %>%
-  filter(!is.nan(Oldness)) %>%
-  pivot_wider(names_from=Solver, values_from=Oldness) %>%
+oldness_by_pkg_success_non_trivial
+
+
+## -----------------------------------------------------------------------------
+# oldness_minold_comparison_df <- oldness_data %>%
+#   filter(!is.nan(Oldness)) %>%
+#   pivot_wider(names_from=Solver, values_from=Oldness) %>%
+#     mutate(CompCat=change_cat(MinOldness - NPM))
+
+oldness_minold_comparison_df <- oldness_by_pkg_success_non_trivial
+
+oldness_minold_comparison_df %>%
   ggplot(aes(x=NPM,y=MinOldness)) + 
   geom_point(shape=4, size=1.5) + 
   geom_segment(aes(x = 0, y = 0, xend = 1, yend = 1), size=0.02, color="red") +
@@ -575,6 +638,25 @@ oldness_data %>%
 
 mysave("oldness_scatterplot.pdf")
 
+
+## -----------------------------------------------------------------------------
+oldness_minold_comparison_df %>%
+  ggplot(aes(MinOldness - NPM)) +
+  stat_ecdf() +
+  ylab("Percentange of packages") +
+  xlab("Difference in oldness, minimizing oldness") +
+  mytheme()
+mysave("oldness_ecdf.pdf")
+
+
+## -----------------------------------------------------------------------------
+ggplot(oldness_minold_comparison_df, aes(x= MinOldness - NPM)) + 
+  mytheme() + 
+  geom_histogram() + 
+  xlab('Oldness difference, minimizing oldness') + 
+  ylab('Count')
+  # scale_x_continuous(trans='log10')
+mysave('oldness_hist.pdf')
 
 
 ## -----------------------------------------------------------------------------
@@ -620,6 +702,17 @@ mean(size_shrinkage$ShrinkageMinDuplicates)
 
 
 ## -----------------------------------------------------------------------------
+size_delta <- size_per_project_solver %>%
+  mutate(DeltaMinDeps = NPM - MinDeps,
+         DeltaMinOldness = NPM - MinOldness,
+         DeltaMinDuplicates = NPM - MinDuplicates) 
+           
+mean(size_delta$DeltaMinDeps)
+mean(size_delta$DeltaMinOldness)
+mean(size_delta$DeltaMinDuplicates)
+
+
+## -----------------------------------------------------------------------------
 min_dep_analysis_shrinkage %>% filter(Comparison == "NPM_NPM_MinDepsOldness_Shrinkage") %>% inner_join(size_shrinkage) %>% select(Project, Shrinkage, ShrinkageMinDeps) %>% rename(NumDepsShrink = Shrinkage, FSShrink = ShrinkageMinDeps)
 
 
@@ -631,6 +724,44 @@ size_shrinkage %>%
   ggplot(aes(x=Shrinkage)) + stat_ecdf() + mytheme() + xlab("Fraction of size on disk") + ylab("Percentage of packages")
 
 mysave("disk_shrinkage_ecdf.pdf")
+
+
+## -----------------------------------------------------------------------------
+size_shrinkage %>% 
+  select(Project,ShrinkageMinDeps,ShrinkageMinOldness,ShrinkageMinDuplicates) %>%
+  pivot_longer(cols = starts_with("Shrinkage"), names_to="Config", values_to="Shrinkage") %>%
+  filter(Config=="ShrinkageMinDeps") %>%
+  ggplot(aes(x=Shrinkage)) + 
+  geom_histogram() + 
+  mytheme() + 
+  xlab("Fraction of size on disk") + 
+  ylab("Percentage of packages")
+
+mysave("disk_shrinkage_hist.pdf")
+
+
+## -----------------------------------------------------------------------------
+size_delta %>% 
+  select(Project,DeltaMinDeps,DeltaMinOldness,DeltaMinDuplicates) %>%
+  pivot_longer(cols = starts_with("Delta"), names_to="Config", values_to="Delta") %>%
+  filter(Config=="DeltaMinDeps") %>%
+  ggplot(aes(x=Delta)) + stat_ecdf() + mytheme() + xlab("Saved bytes using MaxNPM") + ylab("Percentage of packages")
+
+mysave("disk_delta_ecdf.pdf")
+
+
+## -----------------------------------------------------------------------------
+size_delta %>% 
+  select(Project,DeltaMinDeps,DeltaMinOldness,DeltaMinDuplicates) %>%
+  pivot_longer(cols = starts_with("Delta"), names_to="Config", values_to="Delta") %>%
+  filter(Config=="DeltaMinDeps") %>%
+  ggplot(aes(x=Delta)) + 
+  geom_histogram() + 
+  mytheme() + 
+  xlab("Saved bytes using MaxNPM") + 
+  ylab("Percentage of packages")
+
+mysave("disk_delta_hist.pdf")
 
 
 ## -----------------------------------------------------------------------------
@@ -655,8 +786,8 @@ write(
 
 write(
   str_c("\\newcommand{\\dataFSShrinkageQuartileFirst}{", 
-        round(100 * fs_shrinkage$Quantile25, digits=2),
-        "}\n"),
+        round(100 * fs_shrinkage$Quantile25, digits=0),
+        "\\%}\n"),
   results_tex, append=TRUE)
 
 
@@ -699,7 +830,7 @@ new_slows
 ## -----------------------------------------------------------------------------
 slowdowns %>% ggplot(aes(x=Slowdown)) + 
   stat_ecdf() +
-  xlab("Additional time taken with MinNPM (s)") +
+  xlab("Additional time taken with MaxNPM (s)") +
   ylab("Percentage of packages") +
   mytheme()
 
@@ -709,7 +840,7 @@ mysave("slowdown_ecdf.pdf")
 ## -----------------------------------------------------------------------------
 slowdowns %>% ggplot(aes(x=Slowdown)) + 
   stat_ecdf() +
-  xlab("Additional time taken with MinNPM (s)") +
+  xlab("Additional time taken with MaxNPM (s)") +
   ylab("Percentage of packages") +
   mytheme() + xlim(0, 20)
 
@@ -717,6 +848,9 @@ mysave("slowdown_ecdf_no_outliers.pdf")
 
 
 ## -----------------------------------------------------------------------------
+min_slowdown <- round(min(na.omit(slowdowns$Slowdown)), digits = 1)
+quantile_1st <- round(quantile(na.omit(slowdowns$Slowdown), 0.25), digits = 1)
+quantile_3rd <- round(quantile(na.omit(slowdowns$Slowdown), 0.75), digits = 1)
 mean_slowdown <- round(mean(na.omit(slowdowns$Slowdown)), digits = 1)
 median_slowdown <- round(median(na.omit(slowdowns$Slowdown)), digits = 1)
 max_slowdown <- round(max(na.omit(slowdowns$Slowdown)), digits = 1)
@@ -736,6 +870,24 @@ write(
         max_slowdown,
         "s}\n"),
   results_tex, append=TRUE)
+
+write(
+str_c("\\newcommand{\\dataMinSlowdown}{", 
+      min_slowdown,
+      "s}\n"),
+results_tex, append=TRUE)
+
+write(
+str_c("\\newcommand{\\dataFirstQuantileSlowdown}{", 
+      quantile_1st,
+      "s}\n"),
+results_tex, append=TRUE)
+
+write(
+str_c("\\newcommand{\\dataThirdQuantileSlowdown}{", 
+      quantile_3rd,
+      "s}\n"),
+results_tex, append=TRUE)
 
 mean_slowdown
 median_slowdown
