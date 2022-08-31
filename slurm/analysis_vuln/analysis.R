@@ -4,8 +4,8 @@ library(kimisc)
 
 
 
-data_dir <- "../permanently_saved_results/federico-vuln-exp"
-vuln <- read_csv(str_c(data_dir, "/aug_27_gather.csv"),
+data_dir <- "/home/artifact"
+vuln <- read_csv(str_c(data_dir, "/experiment-dir/results.csv"),
         col_types ="ccfddfc")
 results_tex <- str_c(data_dir, "/results.tex")
 plots_dir <- str_c(data_dir, "/plots")

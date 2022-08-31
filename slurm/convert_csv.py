@@ -20,6 +20,8 @@ with open(file, newline='') as csvfile:
             new_row[2] = "audit fix force"
         elif row[1] == "True" and row[4] == "min_cve,min_oldness":
             new_row[2] = "maxnpm_cve_oldness"
+        elif row[1] == "True" and row[4] == "min_oldness,min_cve":
+            new_row[2] = "maxnpm_oldness_cve"
         else:
             continue
 
