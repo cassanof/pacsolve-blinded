@@ -54,31 +54,31 @@ vulnByProject <- vuln %>%
     # group_by(name,commit) %>%
     # summarise(across(starts_with("CVE."), ~sum(.x,na.rm=TRUE))) %>% ungroup()
 head(vulnByProject)
-nrow(vulnByProject
+nrow(vulnByProject)
 
-breaks <- c(0, 1, 10, 25, 50, 100, 1000)
-bucketedVuln <- vulnByProject %>%
-    filter(`CVE.audit fix` >= 0 & `CVE.audit fix force`>=0 & `CVE.maxnpm_cve_oldness`>=0) %>%
-    mutate(across(starts_with('CVE'), ~cut_format(.x, breaks=breaks))) %>% # Bucket all CVE columns
-    mutate_if(is.factor, as.character) %>%  # Default is these are factors, make them char so easier to handle
-    mutate(across(starts_with('CVE'), ~replace(.,is.na(.), '0'))) %>% # If it was NA, it was because it was outside of the range, aka == 0
-    group_by(`CVE.audit fix`,`CVE.maxnpm_cve_oldness`) %>% summarise(count=n()) %>%
-    # Sum the count for CVE audit fix and add a row for that called 'total'
-    bind_rows(group_by(.,`CVE.audit fix`) %>%
-        summarise(count=sum(count)) %>%
-        mutate(`CVE.maxnpm_cve_oldness`='Total')) %>%
-    bind_rows(group_by(.,`CVE.maxnpm_cve_oldness`) %>%
-        summarise(count=sum(count)) %>%
-        mutate(`CVE.audit fix`='Total'))
+# breaks <- c(0, 1, 10, 25, 50, 100, 1000)
+# bucketedVuln <- vulnByProject %>%
+    # filter(`CVE.audit fix` >= 0 & `CVE.audit fix force`>=0 & `CVE.maxnpm_cve_oldness`>=0) %>%
+    # mutate(across(starts_with('CVE'), ~cut_format(.x, breaks=breaks))) %>% # Bucket all CVE columns
+    # mutate_if(is.factor, as.character) %>%  # Default is these are factors, make them char so easier to handle
+    # mutate(across(starts_with('CVE'), ~replace(.,is.na(.), '0'))) %>% # If it was NA, it was because it was outside of the range, aka == 0
+    # group_by(`CVE.audit fix`,`CVE.maxnpm_cve_oldness`) %>% summarise(count=n()) %>%
+    # # Sum the count for CVE audit fix and add a row for that called 'total'
+    # bind_rows(group_by(.,`CVE.audit fix`) %>%
+        # summarise(count=sum(count)) %>%
+        # mutate(`CVE.maxnpm_cve_oldness`='Total')) %>%
+    # bind_rows(group_by(.,`CVE.maxnpm_cve_oldness`) %>%
+        # summarise(count=sum(count)) %>%
+        # mutate(`CVE.audit fix`='Total'))
 
-# Create a matrix where the columns are for audit fix, rows are for MaxNPM
-bucketedVuln %>%
-    pivot_wider(names_from=`CVE.audit fix`, values_from=count) %>%
-    relocate(`0`, .before=`(   1,   10]`) %>%
-    mutate_if(is.numeric,~replace(.,is.na(.), 0)) %>%
-    arrange(CVE.maxnpm_cve_oldness) #%>%
-        # kable("html", booktabs=TRUE, linesep="", digits=0, escape=FALSE, format.args = list(big.mark = ",",
-        #   scientific = FALSE)) %>% as.character() %>% display_html()
+# # Create a matrix where the columns are for audit fix, rows are for MaxNPM
+# bucketedVuln %>%
+    # pivot_wider(names_from=`CVE.audit fix`, values_from=count) %>%
+    # relocate(`0`, .before=`(   1,   10]`) %>%
+    # mutate_if(is.numeric,~replace(.,is.na(.), 0)) %>%
+    # arrange(CVE.maxnpm_cve_oldness) #%>%
+        # # kable("html", booktabs=TRUE, linesep="", digits=0, escape=FALSE, format.args = list(big.mark = ",",
+        # #   scientific = FALSE)) %>% as.character() %>% display_html()
 
 vulnByProject %>% filter(name == 'spreadable')
 
@@ -89,11 +89,11 @@ change_cat <- function(x) {
 
 
 CVEDiff <- vulnByProject %>%
-    mutate(CVEDiff=`CVE.audit fix` - `CVE.maxnpm_cve_oldness`, CVEPIPDiff=`CVE.audit fix` - `CVE.maxnpm_cve_oldness_pip_else_npm`) %>%
+    mutate(CVEDiff=`CVE.audit fix` - `CVE.maxnpm_cve_oldness`, CVEOldDiff=`CVE.audit fix` - `CVE.maxnpm_oldness_cve`) %>%
     mutate(CVEDiff=round(CVEDiff, 6)) %>%
-    mutate(CVEPIPDiff=round(CVEPIPDiff, 6)) %>%
+    mutate(CVEOldDiff=round(CVEOldDiff, 6)) %>%
     mutate(CVEChangeCat=change_cat(CVEDiff)) %>%
-    mutate(CVEPIPChangeCat=change_cat(CVEPIPDiff))
+    mutate(CVEPIPChangeCat=change_cat(CVEOldDiff))
 
 head(CVEDiff)
 
